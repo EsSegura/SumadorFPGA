@@ -6,7 +6,7 @@ FAMILY = GW1N-9C
 DEVICE = GW1NR-LV9QN88PC6/I5
 
 #Nombre del proyecto... Acá ponen el nombre que deseen.
-PROYECT = demo
+PROYECT = 
 
 #Fuentes de diseno
 SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv que estan en design
@@ -15,18 +15,18 @@ SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv 
 
 #Fuente de simulacion
 #aca va el testbench que quieran simular
-TESTBENCH = ../sim/module_tb.v
+TESTBENCH = ../sim/TB.sv
 
 # Constraints para el proyecto
 #aca va el archivo de constraints del proyecto
-CONSTRAINTS = ../constr/module_deco_gray.cst
+CONSTRAINTS = ../constr/CONSTRAINTS.cst
 
 #el top se indica sin la extension .v, esto hace referencia al nombre que le pusieron al módulo y no al archivo en si.
-TOP_DESIGN = module_7_segments
-TOP_TB     = test
+TOP_DESIGN = 
+TOP_TB     = 
 
 #nombre del vcd que va a generar el tb
-VCD_FILE = module_7_segments_tb.vcd
+VCD_FILE = 
 
 
 all: synth pnr bitstream load
