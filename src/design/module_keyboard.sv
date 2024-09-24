@@ -1,17 +1,24 @@
 module teclado_matricial (
-    input logic clk,           // Señal de reloj
+    input logic clk,           // Señal de reloj (27 MHz)
     input logic rst,           // Señal de reinicio
     input logic [3:0] row_in,  // Entradas de las filas (idle = 4'b0000, tecla presionada = 1)
     output logic [3:0] col_out, // Salidas de las columnas
     output logic [3:0] key_out  // Código de la tecla presionada (salida principal)
 );
 
+    // Frecuencia del reloj dividido
+    logic slow_clk;
+    
     // Registro de desplazamiento para las columnas
     logic [3:0] col_shift_reg;  // Registro de desplazamiento para las columnas
     logic [1:0] column_index;   // Índice de la columna activa (0 a 3)
     logic [3:0] row_capture;    // Captura de las filas
     logic key_pressed;          // Estado de tecla presionada
     logic [3:0] key_code;       // Código de la tecla presionada
+
+    // Variables para el flip-flop de debounce
+    logic debounced_key;
+    logic [15:0] clk_divider_counter;
 
     // FSM States
     typedef enum logic [1:0] {
@@ -21,8 +28,23 @@ module teclado_matricial (
     } state_t;
     state_t current_state, next_state;
 
-    // Inicialización del registro de desplazamiento y FSM
+    // Divisor de frecuencia para generar un reloj lento
     always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            clk_divider_counter <= 16'd0;
+            slow_clk <= 1'b0;
+        end else begin
+            if (clk_divider_counter == 16'd27000) begin // Dividir 27 MHz para obtener 1 KHz
+                slow_clk <= ~slow_clk;
+                clk_divider_counter <= 16'd0;
+            end else begin
+                clk_divider_counter <= clk_divider_counter + 1;
+            end
+        end
+    end
+
+    // Inicialización del registro de desplazamiento y FSM
+    always_ff @(posedge slow_clk or posedge rst) begin
         if (rst) begin
             col_shift_reg <= 4'b0001; // Empezar activando la primera columna (solo un bit activo)
             column_index <= 0;
@@ -52,7 +74,7 @@ module teclado_matricial (
                 end
             end
             DEBOUNCE: begin
-                if (row_in == 4'b0000) begin // Esperar que la tecla se libere
+                if (debounced_key) begin // Si el flip-flop de debounce detecta una tecla fija
                     key_pressed = 0;
                     next_state = IDLE; // Volver a reposo
                 end
@@ -60,11 +82,24 @@ module teclado_matricial (
         endcase
     end
 
+    // Flip-flop para el debounce: Captura el estado de la tecla presionada de forma estable
+    always_ff @(posedge slow_clk or posedge rst) begin
+        if (rst) begin
+            debounced_key <= 0;
+        end else begin
+            if (row_in != 4'b0000) begin
+                debounced_key <= 1; // Detectar si hay una tecla presionada sin rebote
+            end else begin
+                debounced_key <= 0; // Si no hay tecla presionada
+            end
+        end
+    end
+
     // Asignación de la salida de las columnas
     assign col_out = col_shift_reg;
 
     // Generar código de tecla presionada basado en columna activa y fila leída
-    always_ff @(posedge clk) begin
+    always_ff @(posedge slow_clk) begin
         if (key_pressed) begin
             case ({col_shift_reg, row_capture})
                 // Mapeo de las combinaciones de columnas y filas a los códigos de tecla
