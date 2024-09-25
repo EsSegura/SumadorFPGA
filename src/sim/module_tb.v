@@ -1,65 +1,74 @@
-`timescale 1ns/1ps
+`timescale 1ns / 1ps
 
-module test();
+module test;
 
-    reg clk_i;
-    reg rst_i;
-    reg [15:0] bin_i;
-    wire [3:0] anodo_o;
-    wire [6:0] catodo_o;
+    // Parámetros
+    parameter CLOCK_PERIOD = 37; // 27 MHz
 
-    // Instancia del módulo
-    module_7_segments uut 
-    (
-        .clk_i(clk_i),
-        .rst_i(rst_i),
-        .bin_i(bin_i),
-        .anodo_o(anodo_o),
-        .catodo_o(catodo_o)
+    // Señales de prueba
+    reg clk;                     // Reloj
+    reg rst;                     // Reset
+    reg [3:0] bin;              // Entrada binaria
+    wire [3:0] anodo;           // Salida de anodos
+    wire [6:0] catodo;          // Salida de cátodos
+
+    // Instanciar el módulo superior
+    top_module uut (
+        .clk_i(clk),             // Conexión del reloj
+        .rst_i(rst),             // Conexión de reset
+        .bin_i(bin),             // Conexión de entrada binaria
+        .anodo_o(anodo),         // Conexión de salida de anodos
+        .catodo_o(catodo)        // Conexión de salida de cátodos
     );
 
-    // Generar el reloj
-    always begin
-        #5 clk_i = ~clk_i; // Reloj de 10ns (100 MHz)
+    // Generar señal de reloj
+    initial begin
+        clk = 0;
+        forever #(CLOCK_PERIOD / 2) clk = ~clk; // Cambia de estado cada mitad del período
     end
 
-    // Testbench
+    // Probar diferentes entradas
     initial begin
-        // Inicialización
-        clk_i = 0;
-        rst_i = 0;
-        bin_i = 16'd0;
+        // Inicializar señales
+        rst = 0;
+        bin = 4'b0000;
 
-        // Reset activo por 20ns
-        #10 rst_i = 1;
-        #20 rst_i = 0;
-        #10 rst_i = 1;
+        // Aplicar reset
+        #5 rst = 1;  // Desactivar reset
+        #10;
 
-        // Prueba 1: Mostrar el número 1234
-        bin_i = 16'd1234; // Número binario 1234
-        #100000; // Espera suficiente para ver el número en el display
+        // Probar diferentes valores de entrada
+        bin = 4'b0001; // Entrada: 1
+        #100; // Esperar tiempo para observar salida
 
-        // Prueba 2: Mostrar el número 5678
-        bin_i = 16'd5678; // Número binario 5678
-        #100000; // Espera suficiente para ver el número en el display
+        bin = 4'b0010; // Entrada: 2
+        #100;
 
-        // Prueba 3: Mostrar el número 9999
-        bin_i = 16'd9999; // Número binario 9999
-        #100000; // Espera suficiente para ver el número en el display
+        bin = 4'b0011; // Entrada: 3
+        #100;
 
-        // Prueba 4: Mostrar el número 0
-        bin_i = 16'd0; // Número binario 0
-        #100000; // Espera suficiente para ver el número en el display
+        bin = 4'b0100; // Entrada: 4
+        #100;
 
-        // Fin de la simulación
+        bin = 4'b1001; // Entrada: 9
+        #100;
+
+        bin = 4'b1010; // Entrada: 10
+        #100;
+
+        // Finalizar simulación
         $finish;
     end
 
-    // Mostrar el estado del display
+    // Monitorear salidas
     initial begin
-        $monitor("Time: %d, bin_i: %d, anodo_o: %b, catodo_o: %b", 
-                 $time, bin_i, anodo_o, catodo_o);
+        $monitor("Time: %0t | Bin: %b | Anodo: %b | Catodo: %b", $time, bin, anodo, catodo);
+        $dumpfile("module_7seg.vcd");
+        $dumpvars(0, test);
     end
 
 endmodule
+
+
+
 
