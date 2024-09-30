@@ -1,7 +1,8 @@
-module module_7_segments #(
+module module_7_segments #
+(
     parameter DISPLAY_REFRESH = 27000
 )(
-    input clk_i,
+    input clk,
     input rst_i,
     input [15:0] bcd_i, 
     output reg [3:0] anodo_o, 
@@ -14,7 +15,7 @@ module module_7_segments #(
     reg [1:0] en_conmutador; 
 
     // Output refresh counter
-    always @(posedge clk_i or negedge rst_i) begin
+    always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin
             cuenta_salida <= DISPLAY_REFRESH - 1;
             en_conmutador <= 0;
@@ -29,7 +30,7 @@ module module_7_segments #(
     end
 
     // Contador de 2 bits
-    always @(posedge clk_i or negedge rst_i) begin
+    always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin
             en_conmutador <= 0; // Reinicia el contador
         end else begin 
@@ -38,7 +39,7 @@ module module_7_segments #(
             end
         end
     end
-    
+
     // Multiplexed digits
     always @(en_conmutador) begin
         digito_o = 0; // Inicializar
@@ -86,5 +87,3 @@ module module_7_segments #(
         endcase
     end
 endmodule
-
-
