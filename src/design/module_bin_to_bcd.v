@@ -1,7 +1,7 @@
 module module_bin_to_bcd #(
     parameter WIDTH = 4
 )(
-    input clk_i,
+    input clk,
     input rst_i,
     input [WIDTH - 1 : 0] bin_i,
     output reg [15:0] bcd_o // 4 dígitos BCD
@@ -20,7 +20,7 @@ module module_bin_to_bcd #(
         millares  = (bin_i / 1000) % 10; // Obtener millares (0 para 0-15)
     end
 
-    always @(posedge clk_i or negedge rst_i) begin
+    always @(posedge clk or negedge rst_i) begin
         if (~rst_i) begin
             bcd_o <= 16'b0; // Resetear la salida a 0
         end else begin
