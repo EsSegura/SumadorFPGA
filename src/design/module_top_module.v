@@ -25,7 +25,7 @@ module top_module (
     module_bin_to_bcd #(
         .WIDTH(4)                      // Ancho de entrada binaria
     ) u_bin_to_bcd (
-        .clk_i(clk_i),                 // Conexión del reloj
+        .clk(clk),                 // Conexión del reloj
         .rst_i(rst_i),                 // Conexión de reset
         .bin_i(num1_hex),              // Conexión de entrada binaria (primer número)
         .bcd_o(bcd)                    // Conexión de salida BCD
@@ -35,7 +35,7 @@ module top_module (
     module_7_segments #(
         .DISPLAY_REFRESH(27000)        // Frecuencia de refresco
     ) u_7_segments (
-        .clk_i(clk_i),                  // Conexión del reloj
+        .clk(clk),                  // Conexión del reloj
         .rst_i(rst_i),                  // Conexión de reset
         .bcd_i(bcd),                    // Conexión de entrada BCD
         .anodo_o(anodo_o),              // Conexión de salida de anodos
