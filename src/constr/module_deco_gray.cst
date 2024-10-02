@@ -43,14 +43,13 @@ IO_PORT "codigo_bin_led_po[2]" DRIVE=8 IO_TYPE=LVCMOS18 PULL_MODE=DOWN;
 IO_LOC  "codigo_bin_led_po[3]" 14;
 IO_PORT "codigo_bin_led_po[3]" DRIVE=8 IO_TYPE=LVCMOS18 PULL_MODE=DOWN;
 
-IO_LOC  "codigo_gray_pi[0]" 28;
-IO_PORT "codigo_gray_pi[0]" IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
+IO_PORT "col_shift_reg[0]" IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
 
-IO_LOC  "codigo_gray_pi[1]" 27;
-IO_PORT "codigo_gray_pi[1]" IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
+IO_LOC  "col_shift_reg[0]" 27;
+IO_PORT "col_shift_reg[0]" IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
 
-IO_LOC  "codigo_gray_pi[2]" 26;
-IO_PORT "codigo_gray_pi[2]" IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
+IO_LOC  "col_shift_reg[0]" 26;
+IO_PORT "col_shift_reg[0]" IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
 
-IO_LOC  "codigo_gray_pi[3]" 25;
-IO_PORT "codigo_gray_pi[3]" IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
+IO_LOC  "col_shift_reg[0]" 25;
+IO_PORT "col_shift_reg[0]" IO_TYPE=LVCMOS33 PULL_MODE=DOWN;

@@ -13,7 +13,6 @@ module module_7_segments #
     reg [WIDTH_DISPLAY_COUNTER-1:0] cuenta_salida;
     reg [3:0] digito_o;
     reg [1:0] en_conmutador;
-    reg [15:0] bcd_1 = 16'h0002; 
 
     // Output refresh counter
     always @(posedge clk or negedge rst_i) begin
