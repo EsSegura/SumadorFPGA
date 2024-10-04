@@ -1,74 +1,97 @@
-`timescale 1ns / 1ps
+`timescale 1ns/1ns
 
 module test;
 
-    // Parámetros
-    parameter CLOCK_PERIOD = 37; // 27 MHz
+    reg clk_i = 0;
+    reg rst_i;
+    reg [3 : 0] codigo_gray_i;
 
-    // Señales de prueba
-    reg clk;                     // Reloj
-    reg rst;                     // Reset
-    reg [3:0] bin;              // Entrada binaria
-    wire [3:0] anodo;           // Salida de anodos
-    wire [6:0] catodo;          // Salida de cátodos
+    wire [1 : 0] anodo_o;
+    wire [6 : 0] catodo_o;
+    wire [3 : 0] codigo_bin_led_o;
 
-    // Instanciar el módulo superior
-    top_module uut (
-        .clk_i(clk),             // Conexión del reloj
-        .rst_i(rst),             // Conexión de reset
-        .bin_i(bin),             // Conexión de entrada binaria
-        .anodo_o(anodo),         // Conexión de salida de anodos
-        .catodo_o(catodo)        // Conexión de salida de cátodos
+    module_top_deco_gray # (6, 5) DUT 
+    (
+
+        .clk_pi            (clk_i),
+        .rst_pi            (rst_i),
+        .codigo_gray_pi    (codigo_gray_i),
+        .anodo_po          (anodo_o),
+        .catodo_po         (catodo_o),              
+        .codigo_bin_led_po (codigo_bin_led_o)
     );
 
-    // Generar señal de reloj
-    initial begin
-        clk = 0;
-        forever #(CLOCK_PERIOD / 2) clk = ~clk; // Cambia de estado cada mitad del período
-    end
-
-    // Probar diferentes entradas
-    initial begin
-        // Inicializar señales
-        rst = 0;
-        bin = 4'b0000;
-
-        // Aplicar reset
-        #5 rst = 1;  // Desactivar reset
+    always begin
+        
+        clk_i = ~clk_i;
         #10;
+    end
+    
+    initial begin
+        rst_i = 0;
+        #30;
+        rst_i = 1;
 
-        // Probar diferentes valores de entrada
-        bin = 4'b0001; // Entrada: 1
-        #100; // Esperar tiempo para observar salida
+        // Display para resultados
+        $display("Gray Code | Binary Code | Decimal");
+        $display("----------|-------------|--------");
 
-        bin = 4'b0010; // Entrada: 2
-        #100;
+        // Probar valores Gray
+        codigo_gray_i = 4'b0000; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b0001; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b0011; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b0010; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b0110; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b0111; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b0101; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b0100; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b1100; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b1101; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b1111; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b1110; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b1010; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b1011; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b1001; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
+        
+        codigo_gray_i = 4'b1000; #100;
+        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
 
-        bin = 4'b0011; // Entrada: 3
-        #100;
-
-        bin = 4'b0100; // Entrada: 4
-        #100;
-
-        bin = 4'b1001; // Entrada: 9
-        #100;
-
-        bin = 4'b1010; // Entrada: 10
-        #100;
-
-        // Finalizar simulación
+        #1000;
         $finish;
     end
 
-    // Monitorear salidas
     initial begin
-        $monitor("Time: %0t | Bin: %b | Anodo: %b | Catodo: %b", $time, bin, anodo, catodo);
-        $dumpfile("module_7seg.vcd");
+        $dumpfile("module_deco_gray.vcd");
         $dumpvars(0, test);
     end
 
 endmodule
-
-
-
-
