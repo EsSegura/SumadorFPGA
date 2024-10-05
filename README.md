@@ -398,5 +398,8 @@ Durante el desarrollo del sistema, se presentaron varios problemas. En primer lu
 
 ## Apendices:
 ### Apendice 1:
-texto, imágen, etc
+La siguiente imagen presenta el diseño que fue utilizado para controlar los 4 displays 7 segmentos mediante la conversión de binario a BCD.
+
+![image](https://github.com/user-attachments/assets/8c54a3bd-e604-4312-894b-48a5e27ed766)
+
 
