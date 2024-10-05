@@ -1,4 +1,4 @@
-# Calculadora de sumas mediante el uso de dipswitch
+# Calculadora sumadora mediante el uso de dipswitch
 ### Estudiantes:
 -Christian Aparicio Cambronero
 
