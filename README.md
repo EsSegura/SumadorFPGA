@@ -387,6 +387,7 @@ No se definen parámetros para este módulo.
 El módulo `module_top` actúa como el nivel superior de un sistema digital que integra varias funcionalidades, incluidas la limpieza de señales, la acumulación y la visualización en 4 displays de 7 segmentos. Comienza con la limpieza de las señales de entrada mediante módulos de "debounce" para eliminar el ruido de las señales de los interruptores y del botón de suma. La señal limpia de los interruptores se envía al módulo `input_control`, que acumula los valores de los interruptores cuando el botón de suma es presionado. Este acumulador de 12 bits se convierte posteriormente a BCD (Código Decimal Binario) a través del módulo `bin_decimal`. Finalmente, el código BCD resultante se utiliza para activar el display de 7 segmentos mediante el módulo `module_7_segments`, el cual maneja las señales de anodo y cátodo para representar los valores acumulados visualmente.
 
 #### Criterios de diseño
+![image](https://github.com/user-attachments/assets/97ec0969-b74f-43a4-bd2d-2be2ce1743ec)
 
 
 ## 5. Consumo de recursos
