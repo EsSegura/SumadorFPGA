@@ -191,7 +191,6 @@ El módulo `module_7_segments` está diseñado para controlar un display de 7 se
 #### 3.2.4. Criterios de diseño
 Diagramas, texto explicativo...
 
-![Diagrama de bloques para 7 segments](https://github.com/user-attachments/assets/ef69c07c-cfba-4398-b04a-a17f83456829)
 
 
 ### 3.3 Módulo 3
