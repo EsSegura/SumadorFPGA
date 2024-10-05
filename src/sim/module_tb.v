@@ -1,97 +1,81 @@
-`timescale 1ns/1ns
+`timescale 1ns/1ps
 
-module test;
+module tb_module_top;
 
-    reg clk_i = 0;
-    reg rst_i;
-    reg [3 : 0] codigo_gray_i;
+    // Señales del módulo
+    reg clk_pi;                  // Señal de reloj
+    reg rst_pi;                  // Señal de reset
+    reg [3:0] dipswitch;         // Entrada del dipswitch (5 bits)
+    reg suma_btn;                // Botón de suma
 
-    wire [1 : 0] anodo_o;
-    wire [6 : 0] catodo_o;
-    wire [3 : 0] codigo_bin_led_o;
+    // Salidas del módulo
+    wire [3:0] anodo_po;         // Salida de ánodos para displays
+    wire [6:0] catodo_po;        // Salida de cátodos para displays
+    wire [15:0] acumulador_total; // Acumulador total (16 bits)
 
-    module_top_deco_gray # (6, 5) DUT 
-    (
+    // Parámetros de reloj y simulación
+    parameter CLK_PERIOD = 37.037;  // Periodo de 27 MHz
+    parameter DELAY_BTN = 1000;       // Delay para simular el botón
 
-        .clk_pi            (clk_i),
-        .rst_pi            (rst_i),
-        .codigo_gray_pi    (codigo_gray_i),
-        .anodo_po          (anodo_o),
-        .catodo_po         (catodo_o),              
-        .codigo_bin_led_po (codigo_bin_led_o)
+    // Instancia del módulo principal
+    module_top uut (
+        .clk_pi(clk_pi),
+        .rst_pi(rst_pi),
+        .dipswitch(dipswitch),
+        .suma_btn(suma_btn),
+        .anodo_po(anodo_po),
+        .catodo_po(catodo_po),
+        .acumulador_total(acumulador_total)
     );
 
-    always begin
-        
-        clk_i = ~clk_i;
-        #10;
-    end
-    
+    // Generador de reloj a 27 MHz
     initial begin
-        rst_i = 0;
-        #30;
-        rst_i = 1;
-
-        // Display para resultados
-        $display("Gray Code | Binary Code | Decimal");
-        $display("----------|-------------|--------");
-
-        // Probar valores Gray
-        codigo_gray_i = 4'b0000; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b0001; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b0011; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b0010; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b0110; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b0111; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b0101; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b0100; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b1100; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b1101; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b1111; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b1110; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b1010; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b1011; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b1001; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-        
-        codigo_gray_i = 4'b1000; #100;
-        $display("%b   | %b   | %d", codigo_gray_i, codigo_bin_led_o, codigo_bin_led_o);
-
-        #1000;
-        $finish;
+        clk_pi = 0;
+        forever #(CLK_PERIOD / 2) clk_pi = ~clk_pi; // Alterna el reloj cada mitad de periodo
     end
 
+    // Proceso de prueba
     initial begin
-        $dumpfile("module_deco_gray.vcd");
-        $dumpvars(0, test);
+        // Inicialización de señales
+        rst_pi = 0;
+        dipswitch = 4'b0000; // Inicialmente en 0
+        suma_btn = 0;         // Botón de suma inicialmente desactivado
+
+        // Aplicar reset
+        #100 rst_pi = 1;     // Activar reset después de 100 ns
+        #100 rst_pi = 0;     // Desactivar reset
+
+        // Probar sumas con diferentes valores del dipswitch
+        #50000 dipswitch = 4'b0001; // Añadir 1
+        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
+        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
+
+        #70000 dipswitch = 4'b0010; // Añadir 2
+        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
+        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
+
+        #90000 dipswitch = 4'b0100; // Añadir 4
+        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
+        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
+
+        #120000 dipswitch = 4'b1000; // Añadir 8
+        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
+        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
+
+        #140000 dipswitch = 4'b0101; // Añadir 31
+        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
+        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
+
+        // Finalizar la simulación
+        #1000000 $stop;
     end
+
+    // Monitor para observar cambios relevantes
+    // Monitor para observar cambios relevantes
+    initial begin
+        $monitor("Time: %0t ns | Dipswitch: %b | Suma: %b | Acumulador Total: %b | Display: %d", 
+                 $time, dipswitch, suma_btn, acumulador_total, anodo_po);
+    end
+
 
 endmodule
