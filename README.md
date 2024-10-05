@@ -404,9 +404,6 @@ Se utilizó un dipswitch como herramienta para poder introducir los digitos de f
 Durante el desarrollo del sistema, se presentaron varios problemas. En primer lugar, el teclado no operó correctamente debido a las distintas definiciones de sincronía, lo que impidió la captura precisa de las entradas. Además, se estableció un límite en la introducción de números, permitiendo un máximo de 15, lo que a su vez restringió el resultado máximo posible a 30, limitando así la funcionalidad del acumulador. Otro desafío surgió al cargar el código en la FPGA en un entorno Windows, donde se observó que los ceros no se mostraban correctamente; sin embargo, al realizar la carga en Linux Ubuntu, el circuito funcionó sin errores y la acumulación se realizó de manera adecuada. Asimismo, el tiempo se convirtió en un factor en contra, afectando la capacidad de realizar pruebas con el teclado y poder hacerlo funcionar. Finalmente, se identificó que algunos pines estaban configurados por defecto para emitir un 1 lógico, lo que ocasionó que el dipswitch no funcionara hasta que se reconfiguraron adecuadamente, permitiendo así su correcto funcionamiento en el sistema.
 
 ## Apendices:
-### Apendice 1:
-La siguiente imagen presenta el diseño que fue utilizado para controlar los 4 displays 7 segmentos mediante la conversión de binario a BCD.
 
-![image](https://github.com/user-attachments/assets/8c54a3bd-e604-4312-894b-48a5e27ed766)
 
 
