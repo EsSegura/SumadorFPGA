@@ -63,6 +63,7 @@ No se definen parámetros para este módulo.
 El módulo `input_control` gestiona la suma de valores provenientes de un interruptor DIP de 4 bits (`dipswitch`) y los acumula en un registro de 12 bits (`acumulador`) mediante la detección de flancos ascendentes en la señal de un botón de suma (`suma_btn`). El módulo se sincroniza con una señal de reloj (`clk`) y cuenta con una señal de reinicio activo en bajo (`rst`) que establece el acumulador y el estado previo del botón a cero. La operación principal del módulo se basa en detectar el cambio de estado del botón de suma utilizando un registro de estado previo (`suma_btn_prev`), lo que permite identificar el flanco ascendente y realizar la suma del valor del dipswitch al acumulador solo en cada transición de no presionado a presionado. El valor de entrada del dipswitch se amplía a 12 bits concatenando 8 ceros a la izquierda (`{8'b0, dipswitch}`), asegurando que la suma se realice de manera correcta y que el acumulador no exceda su límite de 12 bits. En caso de que la señal de reinicio se active, el módulo restablece el acumulador y el estado del botón, garantizando un estado inicial limpio. El uso de un flanco ascendente para la operación de suma evita la acumulación continua mientras el botón está presionado, proporcionando una operación precisa y sincronizada con el reloj del sistema.
 
 #### 3.1.4. Criterios de diseño
+![image](https://github.com/user-attachments/assets/c0423cd7-c50d-4287-b045-53b740186084)
 
 
 
