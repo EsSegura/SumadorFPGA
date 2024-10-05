@@ -1,30 +1,30 @@
-module module_bin_to_bcd #(
-    parameter WIDTH = 4
-)(
-    input clk,
-    input rst_i,
-    input [WIDTH - 1 : 0] bin_i,
-    output reg [15:0] bcd_o // 4 dígitos BCD
+module bin_decimal (
+    input [11:0] binario,  // 12 bits para manejar la entrada binaria
+    output reg [15:0] bcd   // Salida BCD de 16 bits (4 dígitos)
 );
-
-    reg [3:0] unidades;
-    reg [3:0] decenas;
-    reg [3:0] centenas; // Para números mayores a 99
-    reg [3:0] millares; // Para números mayores a 999
+    integer i;
 
     always @(*) begin
-        // Inicializar unidades, decenas, centenas y millares
-        unidades = bin_i % 10;        // Obtener unidades
-        decenas  = (bin_i / 10) % 10; // Obtener decenas
-        centenas = (bin_i / 100) % 10; // Obtener centenas (0 para 0-15)
-        millares  = (bin_i / 1000) % 10; // Obtener millares (0 para 0-15)
-    end
+        bcd = 16'b0;  // Inicializar BCD a 0
 
-    always @(posedge clk or negedge rst_i) begin
-        if (~rst_i) begin
-            bcd_o <= 16'b0; // Resetear la salida a 0
-        end else begin
-            bcd_o <= {millares, centenas, decenas, unidades}; // Asignar BCD directamente
+        // Proceso de conversión de binario a BCD
+        for (i = 0; i < 12; i = i + 1) begin
+            // Si cualquier grupo de 4 bits en BCD es mayor o igual a 5, suma 3
+            if (bcd[3:0] >= 5) 
+                bcd[3:0] = bcd[3:0] + 4'd3;
+            if (bcd[7:4] >= 5) 
+                bcd[7:4] = bcd[7:4] + 4'd3;
+            if (bcd[11:8] >= 5) 
+                bcd[11:8] = bcd[11:8] + 4'd3;
+            if (bcd[15:12] >= 5) 
+                bcd[15:12] = bcd[15:12] + 4'd3;
+
+            // Desplaza los bits del binario hacia BCD
+            bcd = {bcd[14:0], binario[11-i]}; // Desplaza los bits del binario
         end
     end
 endmodule
+
+
+
+
