@@ -8,7 +8,7 @@ module col_shift_register (
 
     always_ff @(posedge slow_clk or posedge rst) begin
         if (rst) begin
-            col_shift_reg <= 4'b0001;    // Inicializar activando la primera columna
+            col_shift_reg <= 4'b0010;    // Inicializar activando la primera columna
             column_index <= 0;           // Inicializar el índice de columna
         end else begin
             // Desplazar el bit activo hacia la siguiente columna
@@ -17,3 +17,4 @@ module col_shift_register (
         end
     end
 endmodule
+

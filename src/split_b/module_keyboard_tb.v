@@ -57,8 +57,10 @@ module teclado_matricial_tb;
     end
 
     // Monitoreo de señales clave
+
     initial begin
-        $monitor("Tiempo: %0t | col_out = %b | row_in = %b | key_out = %h", $time, col_out, row_in, key_out);
+        $dumpfile("teclado.vcd");
+        $dumpvars(0, teclado_matricial_tb);
     end
 
 endmodule
