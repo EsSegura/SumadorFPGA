@@ -245,10 +245,20 @@ endmodule
 ```
 #### Descripción del testbench 
 
+#### 4.1.1. Parámetros
+
+1.    `CLK_PERIOD` : Corresponde al periodo para obtener un reloj de 27 MHz que se define 37.037 segundos.
+2.    `DELAY_BTN` : COrresponde al tiempo en el que se suelta el botón después de pulsado.
+  
+#### 4.1.2. Entradas y salidas:
+##### Descripción de la entrada:
+
+Se utilizan las mismas entradas y salida que en el modulo top del diseño, y se insertan al llamar al mismos.
+
 El testbench consiste en una simulación de cinco entradas en binario, y una simulación de la pulsación del botón, donde se ve que se agrega el valor a la variable binaria de `acumulador_total`, y además se muestran los tiempos donde se ingresan los las entradas y cuando se realiza la adición, esto utilizando los tiempos establecidos por el reloj interno del la FPGA, simulando este periodo. En la siguiente figura, se observa las pruebas hechas para comprobar que todo funcionara en simulación, donde el tiempo de la simulación, el valor ingresado en el `dipswitch`, `suma` indica si el botón de adicción está pulsado, `acumulado` es la suma acumulada y `display` muestra el número que se debe de mostrar en el display de 7 segmentos.
 
 ![image](https://github.com/user-attachments/assets/d8339787-ce65-47ab-88a0-6b3112804087)
-
+Fig. Salida de del testbench en el monitor
 
 ### Otros modulos
 En este apartado, se colocará el ultimo modulo, el cual corresponde a la unión de los 4 modulos para poder ejecutar un Makefile de manera correcta y su respectiva sincronización.
