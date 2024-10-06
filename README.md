@@ -79,95 +79,6 @@ module module_7_segments # (
     output reg [3 : 0] anodo_o,  // 4 bits para los 4 anodos
     output reg [6 : 0] catodo_o,
 );
-
-    localparam WIDTH_DISPLAY_COUNTER = $clog2(DISPLAY_REFRESH);
-    reg [WIDTH_DISPLAY_COUNTER - 1 : 0] cuenta_salida;
-
-    reg [3 : 0] digito_o;
-    reg en_conmutador;
-    reg [1:0] contador_digitos;  // 2 bits para contar hasta 4
-
-    // Output refresh counter
-    always @ (posedge clk_i) begin
-        if(!rst_i) begin
-            cuenta_salida <= DISPLAY_REFRESH - 1;
-            en_conmutador <= 0;
-        end
-        else begin
-            if(cuenta_salida == 0) begin
-                cuenta_salida <= DISPLAY_REFRESH - 1;
-                en_conmutador <= 1;
-            end
-            else begin
-                cuenta_salida <= cuenta_salida - 1'b1;
-                en_conmutador <= 0;
-            end
-        end
-    end
-
-    // 2-bit counter to select the digit (0 to 3)
-    always @ (posedge clk_i) begin
-        if(!rst_i) begin
-            contador_digitos <= 0;
-        end
-        else begin 
-            if(en_conmutador == 1'b1) begin
-                contador_digitos <= contador_digitos + 1'b1;
-            end
-            else begin
-                contador_digitos <= contador_digitos;
-            end
-        end
-    end
-
-    // Multiplexed digits
-    always @(contador_digitos) begin
-        digito_o = 0;
-        anodo_o = 4'b1111;  // Todos los anodos apagados por defecto
-        
-        case(contador_digitos) 
-            2'b00 : begin
-                anodo_o  = 4'b1110;  // Activa display de unidades
-                digito_o = bcd_i [3 : 0];   // Unidades
-            end
-            2'b01 : begin
-                anodo_o  = 4'b1101;  // Activa display de decenas
-                digito_o = bcd_i [7 : 4];   // Decenas
-            end
-            2'b10 : begin
-                anodo_o  = 4'b1011;  // Activa display de centenas
-                digito_o = bcd_i [11 : 8];  // Centenas
-            end
-            2'b11 : begin
-                anodo_o  = 4'b0111;  // Activa display de millares
-                digito_o = bcd_i [15 : 12]; // Millares
-            end
-            default: begin
-                anodo_o  = 4'b1111;
-                digito_o = 0;
-            end
-        endcase
-    end
-
-    // BCD to 7 segments
-    always @ (digito_o) begin
-        catodo_o  = 7'b1111111;
-        
-        case(digito_o)
-            4'd0: catodo_o  = 7'b1000000;
-            4'd1: catodo_o  = 7'b1111001;
-            4'd2: catodo_o  = 7'b0100100;
-            4'd3: catodo_o  = 7'b0110000;
-            4'd4: catodo_o  = 7'b0011001;
-            4'd5: catodo_o  = 7'b0010010;
-            4'd6: catodo_o  = 7'b0000010;
-            4'd7: catodo_o  = 7'b1111000;
-            4'd8: catodo_o  = 7'b0000000;
-            4'd9: catodo_o  = 7'b0010000;
-            default: catodo_o  = 7'b1111111;
-        endcase
-    end
-endmodule
 ```
 #### 3.2.2. Parámetros
 
@@ -202,28 +113,6 @@ module bin_decimal (
     input [11:0] binario,  // 12 bits para manejar la entrada binaria
     output reg [15:0] bcd   // Salida BCD de 16 bits (4 dígitos)
 );
-    integer i;
-
-    always @(*) begin
-        bcd = 16'b0;  // Inicializar BCD a 0
-
-        // Proceso de conversión de binario a BCD
-        for (i = 0; i < 12; i = i + 1) begin
-            // Si cualquier grupo de 4 bits en BCD es mayor o igual a 5, suma 3
-            if (bcd[3:0] >= 5) 
-                bcd[3:0] = bcd[3:0] + 4'd3;
-            if (bcd[7:4] >= 5) 
-                bcd[7:4] = bcd[7:4] + 4'd3;
-            if (bcd[11:8] >= 5) 
-                bcd[11:8] = bcd[11:8] + 4'd3;
-            if (bcd[15:12] >= 5) 
-                bcd[15:12] = bcd[15:12] + 4'd3;
-
-            // Desplaza los bits del binario hacia BCD
-            bcd = {bcd[14:0], binario[11-i]}; // Desplaza los bits del binario
-        end
-    end
-endmodule
 ```
 #### 3.3.2. Parámetros
 
@@ -252,29 +141,6 @@ module debouncer(
     input noisy_signal,    // Señal con rebote
     output reg clean_signal // Señal limpia sin rebote
 );
-    parameter DEBOUNCE_TIME = 27000; // Tiempo de filtro para eliminar rebotes
-    reg [15:0] counter;              // Contador de tiempo
-
-    always @(posedge clk or negedge rst) begin
-        if (!rst) begin
-            counter <= 0;
-            clean_signal <= 0;
-        end
-        else begin
-            // Si la señal es constante, incrementar el contador
-            if (noisy_signal == clean_signal) begin
-                counter <= 0;  // Resetear el contador si la señal es constante
-            end
-            else begin
-                counter <= counter + 1;
-                if (counter >= DEBOUNCE_TIME) begin
-                    clean_signal <= noisy_signal; // Actualizar la señal limpia
-                    counter <= 0;
-                end
-            end
-        end
-    end
-endmodule
 ```
 #### 3.3.2. Parámetros
 
@@ -329,58 +195,6 @@ module tb_module_top;
         .catodo_po(catodo_po),
         .acumulador_total(acumulador_total)
     );
-
-    // Generador de reloj a 27 MHz
-    initial begin
-        clk_pi = 0;
-        forever #(CLK_PERIOD / 2) clk_pi = ~clk_pi; // Alterna el reloj cada mitad de periodo
-    end
-
-    // Proceso de prueba
-    initial begin
-        // Inicialización de señales
-        rst_pi = 0;
-        dipswitch = 4'b0000; // Inicialmente en 0
-        suma_btn = 0;         // Botón de suma inicialmente desactivado
-
-        // Aplicar reset
-        #100 rst_pi = 1;     // Activar reset después de 100 ns
-        #100 rst_pi = 0;     // Desactivar reset
-
-        // Probar sumas con diferentes valores del dipswitch
-        #50000 dipswitch = 4'b0001; // Añadir 1
-        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
-        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
-
-        #70000 dipswitch = 4'b0010; // Añadir 2
-        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
-        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
-
-        #90000 dipswitch = 4'b0100; // Añadir 4
-        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
-        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
-
-        #120000 dipswitch = 4'b1000; // Añadir 8
-        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
-        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
-
-        #140000 dipswitch = 4'b0101; // Añadir 31
-        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
-        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
-
-        // Finalizar la simulación
-        #1000000 $stop;
-    end
-
-    // Monitor para observar cambios relevantes
-    // Monitor para observar cambios relevantes
-    initial begin
-        $monitor("Time: %0t ns | Dipswitch: %b | Suma: %b | Acumulador Total: %b | Display: %d", 
-                 $time, dipswitch, suma_btn, acumulador_total, anodo_po);
-    end
-
-
-endmodule
 ```
 #### Descripción del testbench 
 
@@ -400,57 +214,6 @@ module module_top(
     output [3:0] anodo_po,
     output [6:0] catodo_po
 );
-    wire [3:0] dipswitch_clean;
-    wire suma_btn_clean;
-    wire [12:0] acumulador; // Acumulador para el resultado de los dipswitches
-    wire [15:0] codigo_bcd;
-
-    // Debouncing para el dipswitch
-    genvar i;
-    generate
-        for (i = 0; i < 4; i = i + 1) begin : debouncer_dipswitch
-            debouncer u_debouncer(
-                .clk(clk_pi),
-                .rst(rst_pi),
-                .noisy_signal(dipswitch[i]),
-                .clean_signal(dipswitch_clean[i])
-            );
-        end
-    endgenerate
-
-    // Debouncing para el botón de suma
-    debouncer debounce_suma(
-        .clk(clk_pi),
-        .rst(rst_pi),
-        .noisy_signal(suma_btn),
-        .clean_signal(suma_btn_clean)
-    );
-
-    // Módulo de control de entradas
-    input_control control_inst(
-        .clk(clk_pi),
-        .rst(rst_pi),
-        .dipswitch(dipswitch_clean),  // Entrada limpia
-        .suma_btn(suma_btn_clean),
-        .acumulador(acumulador)
-    );
-
-    // Conversión de binario a BCD
-    bin_decimal converter (
-        .binario(acumulador), // Usar el acumulador directamente
-        .bcd(codigo_bcd)
-    );
-
-    // Módulo de display de 7 segmentos
-    module_7_segments display (
-        .clk_i(clk_pi),
-        .rst_i(rst_pi),
-        .bcd_i(codigo_bcd),
-        .anodo_o(anodo_po),
-        .catodo_o(catodo_po)
-    );
-
-endmodule
 ```
 #### Parámetros
 
