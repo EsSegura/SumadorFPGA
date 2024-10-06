@@ -203,6 +203,8 @@ El testbench consiste en una simulación de cinco entradas en binario, y una sim
 #### 4.1.2. Entradas y salidas:
 Se utilizan las mismas entradas y salida que en el modulo top del diseño, y se insertan al llamarlo.
 
+#### 4.1.3. Criterios de diseño
+
 En la siguiente figura, se observa las pruebas hechas para comprobar que todo funcionara en simulación, donde el tiempo de la simulación, el valor ingresado en el `dipswitch`, `suma` indica si el botón de adicción está pulsado, `acumulado` es la suma acumulada y `display` muestra el número que se debe de mostrar en el display de 7 segmentos.
 
 ![image](https://github.com/user-attachments/assets/d8339787-ce65-47ab-88a0-6b3112804087)
