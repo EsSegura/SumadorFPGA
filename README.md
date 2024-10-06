@@ -253,7 +253,7 @@ endmodule
 #### 4.1.2. Entradas y salidas:
 ##### Descripción de la entrada:
 
-Se utilizan las mismas entradas y salida que en el modulo top del diseño, y se insertan al llamar al mismos.
+Se utilizan las mismas entradas y salida que en el modulo top del diseño, y se insertan al llamarlo.
 
 El testbench consiste en una simulación de cinco entradas en binario, y una simulación de la pulsación del botón, donde se ve que se agrega el valor a la variable binaria de `acumulador_total`, y además se muestran los tiempos donde se ingresan los las entradas y cuando se realiza la adición, esto utilizando los tiempos establecidos por el reloj interno del la FPGA, simulando este periodo. En la siguiente figura, se observa las pruebas hechas para comprobar que todo funcionara en simulación, donde el tiempo de la simulación, el valor ingresado en el `dipswitch`, `suma` indica si el botón de adicción está pulsado, `acumulado` es la suma acumulada y `display` muestra el número que se debe de mostrar en el display de 7 segmentos.
 
