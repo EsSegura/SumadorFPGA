@@ -116,7 +116,7 @@ No se definen parámetros para este módulo
 El módulo `bin_decimal` está diseñado para convertir un número binario de 12 bits en su equivalente en BCD de 16 bits. El proceso de conversión se realiza mediante un algoritmo de desplazamiento que itera a través de cada bit de la entrada binaria. En cada iteración, se verifica si alguno de los grupos de 4 bits en la salida BCD es mayor o igual a 5; si es así, se le suma 3 a ese grupo, siguiendo el método de corrección de BCD. Luego, el módulo desplaza el valor actual de BCD hacia la izquierda, incorporando el siguiente bit de la entrada binaria en la posición menos significativa. Este proceso se repite durante 12 ciclos, asegurando que todos los bits del número binario se conviertan adecuadamente en su representación BCD.
 
 #### 3.3.4. Criterios de diseño
-![image](https://github.com/user-attachments/assets/efb5779a-ff11-4b45-8b1f-cd76edcdc59d)
+![image](https://github.com/user-attachments/assets/39582ea7-8762-43db-b835-c9df8777d028)
 
 
 ### 3.4 Módulo 4
