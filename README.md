@@ -163,7 +163,7 @@ Con los modulos listos, se trabajo en un testbench para poder ejecutar todo de l
 ```SystemVerilog
 `timescale 1ns/1ps
 
-module tb_module_top;
+module test;
 
     // Señales del módulo
     reg clk_pi;                  // Señal de reloj
@@ -190,10 +190,62 @@ module tb_module_top;
         .catodo_po(catodo_po),
         .acumulador_total(acumulador_total)
     );
+
+    // Generador de reloj a 27 MHz
+    initial begin
+        clk_pi = 0;
+        forever #(CLK_PERIOD / 2) clk_pi = ~clk_pi; // Alterna el reloj cada mitad de periodo
+    end
+
+    // Proceso de prueba
+    initial begin
+        // Inicialización de señales
+        rst_pi = 0;
+        dipswitch = 4'b0000; // Inicialmente en 0
+        suma_btn = 0;         // Botón de suma inicialmente desactivado
+
+        // Aplicar reset
+        #100 rst_pi = 1;     // Activar reset después de 100 ns
+        #100 rst_pi = 0;     // Desactivar reset
+
+        // Probar sumas con diferentes valores del dipswitch
+        #50000 dipswitch = 4'b0001; // Añadir 1
+        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
+        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
+
+        #70000 dipswitch = 4'b0010; // Añadir 2
+        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
+        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
+
+        #90000 dipswitch = 4'b0100; // Añadir 4
+        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
+        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
+
+        #120000 dipswitch = 4'b1000; // Añadir 8
+        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
+        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
+
+        #140000 dipswitch = 4'b0101; // Añadir 31
+        #DELAY_BTN suma_btn = 1;     // Pulsar botón de suma
+        #(10*CLK_PERIOD) suma_btn = 0;     // Liberar botón de suma
+
+        // Finalizar la simulación
+        #1000000 $stop;
+    end
+
+    // Monitor para observar cambios relevantes
+    // Monitor para observar cambios relevantes
+    initial begin
+        $monitor("Time: %0t ns | Dipswitch: %b | Suma: %b | Acumulador Total: %b | Display: %d", 
+                 $time, dipswitch, suma_btn, acumulador_total, anodo_po);
+    end
+
+
+endmodule
 ```
 #### Descripción del testbench 
 
-En la siguiente figura, se observa las pruebas hechas para comprobar que todo funcionara en simulación.
+El testbench consiste en una simulación de cinco entradas en binario, y una simulación de la pulsación del botón, donde se ve que se agrega el valor a la variable binaria de `acumulador_total`, y además se muestran los tiempos donde se ingresan los las entradas y cuando se realiza la adición, esto utilizando los tiempos establecidos por el reloj interno del la FPGA, simulando este periodo. En la siguiente figura, se observa las pruebas hechas para comprobar que todo funcionara en simulación, donde el tiempo de la simulación, el valor ingresado en el `dipswitch`, `suma` indica si el botón de adicción está pulsado, `acumulado` es la suma acumulada y `display` muestra el número que se debe de mostrar en el display de 7 segmentos.
 
 ![image](https://github.com/user-attachments/assets/d8339787-ce65-47ab-88a0-6b3112804087)
 
