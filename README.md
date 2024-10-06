@@ -384,7 +384,7 @@ endmodule
 ```
 #### Descripción del testbench 
 
-E
+En la siguiente figura, se observa las pruebas hechas para comprobar que todo funcionara en simulación.
 
 ![image](https://github.com/user-attachments/assets/d8339787-ce65-47ab-88a0-6b3112804087)
 
