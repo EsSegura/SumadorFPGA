@@ -45,6 +45,8 @@ El módulo `input_control` gestiona la suma de valores provenientes de un interr
 
 #### 3.1.4. Criterios de diseño
 ![image](https://github.com/user-attachments/assets/c0423cd7-c50d-4287-b045-53b740186084)
+Además, la FSM correspondiente a este módulo 
+![image](https://github.com/user-attachments/assets/5edec9ae-7aea-4f31-9552-e226116e4d82)
 
 
 
