@@ -304,6 +304,9 @@ Con los modulos listos, se trabajo en un testbench para poder ejecutar todo de l
 ```
 #### Descripción del testbench 
 
+E
+
+![image](https://github.com/user-attachments/assets/d8339787-ce65-47ab-88a0-6b3112804087)
 
 
 ### Otros modulos
