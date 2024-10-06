@@ -48,6 +48,8 @@ El módulo `input_control` gestiona la suma de valores provenientes de un interr
 
 
 Además, la FSM correspondiente a este módulo 
+
+
 ![image](https://github.com/user-attachments/assets/5edec9ae-7aea-4f31-9552-e226116e4d82)
 
 
