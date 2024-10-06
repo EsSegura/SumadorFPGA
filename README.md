@@ -237,7 +237,7 @@ module test;
     // Monitor para observar cambios relevantes
     initial begin
         $monitor("Time: %0t ns | Dipswitch: %b | Suma: %b | Acumulador Total: %b | Display: %d", 
-                 $time, dipswitch, suma_btn, acumulador_total, anodo_po);
+                 $time, dipswitch, suma_btn, acumulador_total, acumulador_total);
     end
 
 
