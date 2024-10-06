@@ -7,9 +7,14 @@
 -Esteban Segura García 
 ## 1. Abreviaturas y definiciones
 - **FPGA**: Field Programmable Gate Arrays
+- **CLK**: Clock
+- **RST**: Reset
 
 ## 2. Referencias
 [0] David Harris y Sarah Harris. *Digital Design and Computer Architecture. RISC-V Edition.* Morgan Kaufmann, 2022. ISBN: 978-0-12-820064-3
+[1] Simple Tutorials for Embedded Systems, "**How to Create a 7 Segment Controller in Verilog? | Xilinx FPGA Programming Tutorials*" YouTube, 3 de octubre de 2018. Available: https://www.youtube.com/watch?v=v2CM8RaEeQU&t=116s
+[2] Anas Salah Eddin, **49 - Verilog Description of FSMs* YouTube, 26 de marzo de 2018. Available: https://www.youtube.com/watch?v=j2v2s7caBwI
+[3] Anas Salah Eddin, **M3-6-Debouncing Circuit (FSM)* YouTube, 4 de septiembre de 2020. Available: https://www.youtube.com/watch?v=wLqPSPC7dWE
 
 ## 3. Desarrollo
 
@@ -236,7 +241,7 @@ Se utilizó un dipswitch como herramienta para poder introducir los digitos de f
 
 Durante el desarrollo del sistema, se presentaron varios problemas. En primer lugar, el teclado no operó correctamente debido a las distintas definiciones de sincronía, lo que impidió la captura precisa de las entradas. Además, se estableció un límite en la introducción de números, permitiendo un máximo de 15, lo que a su vez restringió el resultado máximo posible a 30, limitando así la funcionalidad del acumulador. Otro desafío surgió al cargar el código en la FPGA en un entorno Windows, donde se observó que los ceros no se mostraban correctamente; sin embargo, al realizar la carga en Linux Ubuntu, el circuito funcionó sin errores y la acumulación se realizó de manera adecuada. Asimismo, el tiempo se convirtió en un factor en contra, afectando la capacidad de realizar pruebas con el teclado y poder hacerlo funcionar. Finalmente, se identificó que algunos pines estaban configurados por defecto para emitir un 1 lógico, lo que ocasionó que el dipswitch no funcionara hasta que se reconfiguraron adecuadamente, permitiendo así su correcto funcionamiento en el sistema.
 
-## Apendices:
+
 
 
 
